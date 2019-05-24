@@ -1,0 +1,43 @@
+<script type="text/javascript" src="__STATIC__/index/js/n_nav.js"></script>
+<script src="__STATIC__/layui/layui.js"></script>
+{include file="public/nav"}
+<!--End Menu End--> 
+<div class="i_bg">  
+    <div class="content mar_20">
+    	<img src="__STATIC__/index/images//img3.jpg" />        
+    </div>
+    
+    <!--Begin 第三步：提交订单 Begin -->
+    <div class="content mar_20">
+    	
+       
+    	<div class="warning">        	
+            <table border="0" style="width:1000px; text-align:center;" cellspacing="0" cellpadding="0">
+              <tr height="35">
+                <td style="font-size:18px;">
+                	感谢您在本店购物！您的订单已提交成功，请记住您的订单号: <font color="#ff4e00">{$orderInfo.order_no}</font>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-size:14px; font-family:'宋体'; padding:10px 0 20px 0; border-bottom:1px solid #b6b6b6;">
+                {if ($orderInfo['pay_type']==1)}
+                	您选定的支付方式为: <font color="#ff4e00"><a href="{:url('Order/alipay',['order_id'=>$orderInfo.order_id])}">支付宝</a></font>； &nbsp; &nbsp;
+                    {elseif ($orderInfo['pay_type']==2)}
+                    您选定的支付方式为: <font color="#ff4e00"><a href="">微信</a></font>； &nbsp; &nbsp;
+                    {else/}
+                    您选定的支付方式为: <font color="#ff4e00"><a href="">货到付款</a></font>； &nbsp; &nbsp;
+                    {/if}
+                    您的应付款金额为: <font color="#ff4e00">￥{$orderInfo.order_amount}</font>
+                </td>
+              </tr>
+              
+              <tr>
+                <td>
+                	<a href="#">首页</a> &nbsp; &nbsp; <a href="#">用户中心</a>
+                </td>
+              </tr>
+            </table>        	
+        </div>  
+    </div>
+	<!--End 第三步：提交订单 End--> 
+

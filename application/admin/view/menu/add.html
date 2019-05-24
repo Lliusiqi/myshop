@@ -1,0 +1,104 @@
+
+<span class="layui-breadcrumb">
+    <a href="{:url('Index/index')}">首页</a>
+    <a><cite>商品添加</cite></a>
+    <a href="{:url('Menu/index')}"><button class="layui-btn">返回商品列表</button></a>
+</span>
+{$errorMsg?"<script>alert('$errorMsg');</script>":'';}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend></legend>
+  </fieldset>
+<form class="layui-form" action="{:url('Menu/doAdd')}" method="post">
+    <div class="layui-form-item">
+            <label class="layui-form-label">菜单名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="menu_name" lay-verify="required" placeholder="请输入菜单名称" class="layui-input">
+            </div>
+    </div>
+  
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">父级菜单</label>
+        <div class="layui-input-inline">
+          <select name="parent_id">
+            <option value="">请选择父级菜单</option>
+            {volist name="data" id="vo"}
+            <option value="{$vo.menu_id}"><?=str_repeat('|-',$vo['level']-1)?>{$vo.menu_name}</option>
+            {/volist}
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">模块</label>
+      <div class="layui-input-inline">
+          <input type="text" name="model" lay-verify="required" placeholder="请输入模块名称" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">控制器</label>
+      <div class="layui-input-inline">
+          <input type="text" name="controller" lay-verify="required|username" placeholder="请输入控制器名称" class="layui-input">
+      </div>
+    </div>
+    
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">方法</label>
+      <div class="layui-input-inline">
+          <input type="text" name="method" lay-verify="required|username" placeholder="请输入方法名称" class="layui-input">
+      </div>
+    </div>
+    
+    
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+  
+  <script>
+        layui.use(['form','layedit'], function(){
+            var $ = layui.jquery
+            ,form = layui.form
+            layedit = layui.layedit; //建立编辑器
+          
+        
+
+          form.verify({
+            check: function(value, item){ //value：表单的值、item：表单的DOM对象
+                $.post("{:url('Menu/check')}", { Menu_sn: value},
+                function(data){
+                  // alert(data);
+                  if (data) {
+                    $(item).next().html("<font color='red'>商品货号已存在</font>");
+                  }
+                });
+            }
+          });
+          form.verify({
+            username: function(value, item){ //value：表单的值、item：表单的DOM对象
+                var reg = /^\w{1,15}$/;
+                if (!reg.test(value)) {
+                  return '必须是15个字以内的数字字母下划线';
+                }
+                
+                if(/^\d+\d+\d$/.test(value)){
+                return '不能全为数字';
+                }
+
+            }
+          });
+          //监听表单的字段
+        //   form.on('submit(demo1)', function(data){
+        //         console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+        //         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        //     });
+        });
+</script>        
+

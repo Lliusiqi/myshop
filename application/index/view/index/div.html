@@ -1,0 +1,28 @@
+<div cate_id="{$FloorInfo.firstInfo.cate_id}">
+      <div class="i_t mar_10">
+        <span class="floor_num">{$floor_num}F</span>
+        <span class="fl">{$FloorInfo.firstInfo.cate_name}</span>                
+        <span class="i_mores fr">
+            {volist name="$FloorInfo['secondInfo']" id="v"}
+            <a href="#">{$v.cate_name}</a>
+            {/volist}
+        </span>
+      </div>
+      <div class="content">
+
+        <div class="fresh_mid">
+            <ul>
+                {volist name="$FloorInfo['goodsInfo']" id="v"}
+                <li>
+                    <div class="name"><a href="#">{$v.goods_name}</a></div>
+                    <div class="price">
+                        <font>￥<span>{$v.shop_price}</span></font> &nbsp;
+                    </div>
+                    <div class="img"><a href="{:url('Goods/goodsProduct')}?goods_id={$v.goods_id}"><img src="__UPLOADS__/{$v.goods_img}" width="185" height="155" /></a></div>
+                </li>
+                {/volist}
+                                                                                
+            </ul>
+        </div>
+      </div>
+    </div>    

@@ -1,0 +1,140 @@
+<style type="text/css">      
+  .layui-table-cell {height: auto;line-height: 25px;}
+</style>
+
+<span class="layui-breadcrumb">
+    <a href="{:url('Index/index')}">首页</a>
+    <a><cite>分类添加</cite></a>
+    <a href="{:url('Menu/add')}"><button class="layui-btn">＋添加商品</button></a>
+</span>
+{$errorMsg?"<script>alert('$errorMsg');</script>":'';}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend></legend>
+  </fieldset>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+ 
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+    <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+  </div>
+</script>
+ 
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!-- 状态的显示 -->
+<script type="text/html" id="usernameTpl">
+  <!-- 这里的 checked 的状态只是演示 -->
+  {{d.level}}<span><span id="{{d.menu_id}}" class="name"  menu="{{d.menu_name}}">{{d.menu_name}}</span></span>
+</script>
+<script>
+layui.use(['element','table'], function(){
+  var table = layui.table
+  ,form = layui.form
+  element = layui.element;
+  
+  table.render({
+    elem: '#test'
+    ,url:"{:url('Menu/index')}"
+    ,toolbar: '#toolbarDemo'
+    ,title: '用户数据表'
+    ,cols: [[
+      {type: 'checkbox'}
+      ,{field:'menu_id', title:'ID'}
+      ,{field:'menu_name', title:'菜单名称', templet: '#usernameTpl'}
+      ,{field:'model', title:'模块'}
+      ,{field:'controller', title:'控制器名'}
+      ,{field:'method', title:'方法名'}
+      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', }
+    ]]
+    ,page: true
+    ,limit: "<?=config('page_limit')?>"
+  });
+  
+  //头工具栏事件
+  table.on('toolbar(test)', function(obj){
+    var checkStatus = table.checkStatus(obj.config.id);
+    switch(obj.event){
+      case 'getCheckData':
+        var data = checkStatus.data;
+        layer.alert(JSON.stringify(data));
+      break;
+      case 'getCheckLength':
+        var data = checkStatus.data;
+        layer.msg('选中了：'+ data.length + ' 个');
+      break;
+      case 'isAll':
+        layer.msg(checkStatus.isAll ? '全选': '未全选');
+      break;
+    };
+  });
+  
+  //监听行工具事件
+  table.on('tool(test)', function(obj){
+    var data = obj.data;
+    //console.log(obj)
+    if(obj.event === 'del'){
+      layer.confirm('真的删除行吗', function(index){
+        $.get("{:url('Menu/delete')}", { id: data.menu_id},
+          function(data){
+            if (data == 1) {
+              obj.del();
+              return layer.msg('删除成功');
+            }else{
+              layer.close(index);
+              return layer.msg('删除失败');
+            }
+          });
+        
+      });
+    } else if(obj.event === 'edit'){
+      // alert(obj);
+      console.log(obj);
+      location.href="{:url('Menu/update')}?id="+data.menu_id;
+    }
+  });
+  
+  //监听显示导航栏操作
+  form.on('switch(sexDemos)', function(obj){
+    // alert(222);
+    var menu_id = obj.othis.prev().attr('menu_id');
+    var val = obj.value;
+    // console.log(val);
+    // console.log(menu_id);
+    // alert(111);
+    // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+    $.post("{:url('menu/check')}", { menu_id: menu_id, is_show: val });
+    
+  });
+  
+  
+    
+});
+//设置即点即改
+$(document).on('click','.name',function(){
+      var id = $(this).attr('id');
+      var val = $(this).attr('menu');
+      // console.log(id);die;
+      $(this).parent().html('<input type=text id=sp value='+val+'></input>');
+      $('#sp').focus();
+      $('#sp').blur(function(){
+        var vals = $(this).val();
+        // console.log(vals);
+        var obj = $(this);
+        $.post("{:url('Menu/ajaxUpdate')}", { id: id, value: vals },
+            function(data){
+            if (data == 1) {
+              // alert(data);
+              obj.parent().html('<span id='+id+' class="name" menu="'+vals+'">'+vals+'</span>');
+            }else{
+              // alert(data);
+              obj.parent().html('<span id='+id+' class="name" menu="'+val+'">'+val+'</span>');
+            }
+          });
+        
+      });
+});
+</script>

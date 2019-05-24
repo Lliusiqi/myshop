@@ -1,0 +1,117 @@
+<span class="layui-breadcrumb">
+    <a href="{:url('Index/admin')}">首页</a>
+    <a><cite>品牌修改</cite></a>
+    <a href="{:url('Brands/index')}"><button class="layui-btn">返回品牌列表</button></a>
+</span>
+{$errorMsg?"<script>alert('$errorMsg');</script>":'';}
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend></legend>
+  </fieldset>
+<form class="layui-form" action="{:url('Brands/doUpdate')}" method="post">
+  <input type="hidden" name="brand_id" value="{$data.brand_id}">
+    <div class="layui-form-item">
+            <label class="layui-form-label">品牌名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="brand_name" lay-verify="required|username" placeholder="请输入品牌名称" class="layui-input" value="{$data.brand_name}">
+            </div>
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">品牌地址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="brand_url" lay-verify="required" placeholder="请输入品牌地址" class="layui-input" value="{$data.brand_url}">
+            </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否显示</label>
+        <div class="layui-input-block">
+            <input type="checkbox"  name="is_show" lay-skin="switch" lay-filter="switchTest" lay-text="是|否" {$data.is_show==1?'checked':'';}>
+        </div>
+     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">品牌logo</label>
+        <div class="layui-upload">
+            <input type="hidden" name="brand_logo" value="{$data.brand_logo}">
+            <button type="button" class="layui-btn" id="test1">上传图片</button>
+            <div class="layui-upload-list">
+            <img class="layui-upload-img" id="demo1" src="http://uploads.com/{$data.brand_logo}">
+            <p id="demoText"></p>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">品牌描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入描述内容" name="brand_desc" lay-verify="required" class="layui-textarea">{$data.brand_desc}</textarea>
+            </div>
+    </div>
+    
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+          
+        <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+  
+  <script>
+      
+        layui.use(['form', 'upload'], function(){
+            var $ = layui.jquery
+            ,form = layui.form
+            ,upload = layui.upload;
+            
+          //普通图片上传
+          var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: "{:url('Brands/upload')}"
+            ,before: function(obj){
+              //预读本地文件示例，不支持ie8
+              obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+              });
+            }
+            ,done: function(res){
+              //如果上传失败
+              if(res.code > 0){
+                return layer.msg('上传失败');
+              }else{
+                $("input[name='brand_logo']").val(res.msg);
+                return layer.msg('上传成功');
+              }
+              //上传成功
+            }
+            ,error: function(){
+              //演示失败状态，并实现重传
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+              demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+              });
+            }
+          });
+          form.verify({
+            username: function(value, item){ //value：表单的值、item：表单的DOM对象
+                if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                return '用户名不能有特殊字符';
+                }
+                if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                return '用户名首尾不能出现下划线\'_\'';
+                }
+                if(/^\d+\d+\d$/.test(value)){
+                return '用户名不能全为数字';
+                }
+            }
+          });
+          //监听表单的字段
+        //   form.on('submit(demo1)', function(data){
+        //         console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+        //         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        //     });
+        });
+</script>        
+

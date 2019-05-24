@@ -1,0 +1,44 @@
+{__NOLAYOUT__}
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+        <th><input type="checkbox" name="ids[]">ID</th>
+        <th>用户名</th>
+        <th>邮箱</th>
+        <th>注册时间</th>
+        <th>IP地址</th>
+        <th>最后登陆时间</th>
+        <th>操作</th>
+        </tr> 
+    </thead>
+    <tbody>
+        {volist name="list" id="vo"}    
+        <tr>
+            <td><input type="checkbox" name="ids[]" id="{$vo.admin_id}"><span id="{$vo.admin_id}" class="sps">{$vo.admin_id}</span></td>
+            <td><span id="{$vo.admin_id}" class="sps">{$vo.admin_name}</span></td>
+            <td>{$vo.email}</td>
+            <td>{$vo.addtime|date='Y-m-d H:i:s'}</td>
+            <td>{$vo.ip}</td>
+            <td>{$vo.lasttime==0?'从未登录':$vo.lasttime|date='Y-m-d H:i:s'}</td>
+            <td>
+                <a class="layui-btn" href="{:url('Index/update','admin_id='.$vo.admin_id)}">修改</a>
+                <a href="javascript:if(confirm('您确定删除这条记录吗')) location='{:url('Index/del',['admin_id'=>$vo.admin_id])}'" class="layui-btn layui-btn-danger">删除</a>
+            </td>
+        </tr>
+        {/volist}
+    </tbody>
+</table>
+<div id="page" style="margin: 0 auto;">
+{$list|raw}
+</div>
+<script>
+var width = $('.pagination').width();
+    //动态设置盒子的宽度
+    $('#page').css('width',width+1);
+</script>

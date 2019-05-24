@@ -1,0 +1,48 @@
+<span class="layui-breadcrumb">
+    <a href="/demo/">首页</a>
+    <a><cite>友链添加</cite></a>
+    <a href="{:url('Friend/add')}"><button class="layui-btn">＋友链添加</button></a>
+</span>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  </fieldset>
+    <div style="margin-bottom: 20px;"></div>
+  <div class="layui-form page">
+    <table class="layui-table">
+      <colgroup>
+        <col width="150">
+        <col width="150">
+        <col width="200">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>友链ID</th>
+          <th>友链名称</th>
+          <th>友链网址</th>
+          <th>logo</th>
+          <th>添加时间</th>
+          <th>操作</th>
+        </tr> 
+      </thead>
+      <tbody>
+        {volist name="list" id="vo"}    
+        <tr>
+            <td>{$vo.id}</td>
+            <td>{$vo.name}</td>
+            <td>{$vo.url}</td>
+            <td><img src="http://uploads.com/{$vo.logo}" alt=""></td>
+            <td>{$vo.add_time|date='Y-m-d H:i:s'}</td>
+            <td>
+                <a href="javascript:if(confirm('您确定删除这条记录吗')) location='{:url('Friend/delete',['id'=>$vo.id])}'" class="layui-btn layui-btn-danger">删除</a>
+            </td>
+        </tr>
+        {/volist}
+      </tbody>
+    </table>
+  </div>
+    <script>
+    layui.use(['form'], function(){
+      var form = layui.form
+    });
+    
+    </script>

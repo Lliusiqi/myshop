@@ -1,0 +1,72 @@
+<span class="layui-breadcrumb">
+        <a href="{:url('User/index')}">首页</a>
+        <a><cite>用户添加</cite></a>
+</span>
+<div style="float: right;">
+        <a href="{:url('User/index')}" class="layui-btn">返回列表</a>
+</div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend></legend>
+      </fieldset>
+    <form class="layui-form" action="{:url('doAdd')}" method="post">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">角色名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="user_name"  autocomplete="off" placeholder="请输入用户名" class="layui-input" value="{$data.admin_name?$data.admin_name:'';}">
+                </div>
+            </div>
+            <span class="sp"></span>
+        </div>
+        <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">角色描述</label>
+                <div class="layui-input-block">
+                  <textarea placeholder="请输入内容" class="layui-textarea" name="user_desc"></textarea>
+                </div>
+        </div>
+        
+    
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+              
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    <script>
+        $('input:eq(0)').blur(function(){
+            name();
+        });
+        var flag = false;
+        function name() {
+            var data = $('input:eq(0)').val();
+            var span = $('.sp:eq(0)');
+            if (data == '') {
+                span.html("<font color='red'>用户名不能为空！</font>");
+                flag = false;
+            }else{
+                var reg = /^[\w\u4E00-\u9FA5-]{2,30}$/;
+                if (reg.test(data)) {
+                    $.post("{:url('doUser')}", { name: data },
+                    function(data){ 
+                        if (data == 1) {
+                            span.html("<font color='red'>该用户名已存在</font>");
+                            flag = false;
+                        }else{
+                            span.html("<font color='green'>√</font>");
+                            flag = true;
+                        }
+                    });
+                }else{
+                    span.html("<font color='red'>请输入2-20位的数字、字母、下划线或中文！</font>");
+                    flag = false;
+                }
+            }
+        };
+        
+        $('.layui-btn:eq(1)').click(function() {
+            name();
+            return flag;
+        });
+    </script>

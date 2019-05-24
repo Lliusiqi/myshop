@@ -1,0 +1,147 @@
+<script src="__STATIC__/layui/layui.js"></script>
+{include file="public/user_top"}
+<!--End Header End--> 
+<div class="i_bg bg_color">
+    <!--Begin 用户中心 Begin -->
+  <div class="m_content">
+      {include file="public/user_left"}
+    <div class="m_right">
+            <p></p>
+            <div class="mem_tit">收货地址</div>
+      
+
+            {/*修改*/}
+            <table border="0" class="add_tab" style="width:930px;"  cellspacing="0" cellpadding="0">
+              <tr>
+                <td width="135" align="right">配送地区</td>
+                <td colspan="3" style="font-family:'宋体';">
+                  
+                  <select class="area" id="province">
+                      <option value="0" selected="selected">--请选择--</option>
+                       {volist name='provinceInfo' id='v'}
+                       {if ($v['id']==$addressInfo['province'])}
+                      <option value="{$v.id}" selected>{$v.name}</option>
+                      {else/}
+                       <option value="{$v.id}" >{$v.name}</option>
+                      {/if}
+                      {/volist}
+                    </select>
+                    <select class="area" id="city">
+                      <option value="0" selected="selected">--请选择--</option>
+                      {volist name='cityInfo' id='v'}
+                      {if ($v['id']==$addressInfo['city'])}
+                      <option value="{$v.id}" selected>{$v.name}</option>
+                      {else/}
+                       <option value="{$v.id}">{$v.name}</option>
+                      {/if}
+                      {/volist}
+                    </select>
+                    <select class="area" id="area">
+                      <option value="0" selected="selected">--请选择--</option>
+                      {volist name='areaInfo' id='v'}
+                      {if ($v['id']==$addressInfo['area'])}
+                      <option value="{$v.id}" selected>{$v.name}</option>
+                      {else/}
+                      <option value="{$v.id}">{$v.name}</option>
+                      {/if}
+                      {/volist}
+                    </select>
+                    （必填）
+                </td>
+              </tr>
+              <tr>
+                <td align="right">收货人姓名</td>
+                <td style="font-family:'宋体';"><input type="text" id="address_name" class="add_ipt" value="{$addressInfo.address_name}" />（必填）</td>
+                <td align="right">电话</td>
+                <td style="font-family:'宋体';"><input type="text" id="address_tel" class="add_ipt" value="{$addressInfo.address_tel}" />（必填）</td>
+              </tr>
+              <tr>
+                <td align="right">详细地址</td>
+                <td style="font-family:'宋体';"><input type="text" id="address_detail"  class="add_ipt" value="{$addressInfo.address_detail}"/>（必填）</td>
+                <td align="right">邮政编码</td>
+                <td style="font-family:'宋体';"><input type="text" id="address_mail" class="add_ipt" value="{$addressInfo.address_mail}"/></td>
+              </tr>
+              <tr>
+                <td colspan="4">
+                   
+                   <input type="checkbox" id="is_default" {if ($addressInfo['is_default'] == 1)} checked {/if}>是否设置为默认收货地址
+                  
+                </td>
+              </tr>
+            </table>
+            <p align="right">
+               <a href="#" class="add_b">修改</a>
+            </p>
+           <input type="hidden" id="address_id" value="{$addressInfo.address_id}">
+
+            
+        </div>
+    </div>
+  <!--End 用户中心 End--> 
+  <script type="text/javascript">
+     $(function(){
+      layui.use(['layer'],function(){
+        var layer=layui.layer;
+        $(".area").change(function(){
+          var _this=$(this);
+          _this.nextAll("select").html("<option>--请选择--</option>");
+          var id=_this.val();
+          // console.log(id);
+          $.post(
+              "{:url('Address/getArea')}",
+              {id:id},
+              function(res){
+                // console.log(res);
+                var _option="<option>--请选择--</option>";
+                for(var i=0;i<res.length;i++){
+                  _option+="<option value='"+res[i]['id']+"'>"+res[i]['name']+"</option>";
+                }
+                // console.log(_option);
+                _this.next("select").html(_option);
+              },
+              'json'
+            );
+       }); 
+        //点击修改
+        $(".add_b").click(function(){
+           var data={};
+           data.province=$("#province").val();
+           data.city=$("#city").val();
+           data.area=$("#area").val();
+           data.address_id=$("#address_id").val();
+           data.address_name=$("#address_name").val();
+           data.address_tel=$("#address_tel").val();
+           data.address_mail=$("#address_mail").val();
+           data.address_detail=$("#address_detail").val();
+           // console.log(data);
+           var is_default=$("#is_default").prop('checked');
+           if(is_default==true){
+             data.is_default=1;
+           }else{
+              data.is_default=2;
+           }
+           // console.log(data);
+           $.post(
+               "{:url('Address/addressEditDo')}",
+               data,
+               function(res){
+                console.log(res);
+                // layer.msg(res.font,{icon:res.code,time:2000},function(){
+                //   if(res.code==1){
+                //     location.href="{:url('Address/addressList')}"
+                //   }
+                // });
+               }
+            );
+        });
+        //点击编辑
+        $(".edit").click(function(){
+          var _this=$(this);
+         var address_id= _this.parents("div[class='address']").attr('address_id');
+         // console.log(address_id);
+         location.href="{:url('Address/addressEdit')}?address_id="+address_id;
+        });
+      });
+      
+     })
+  </script> 

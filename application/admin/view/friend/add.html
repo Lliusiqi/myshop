@@ -1,0 +1,110 @@
+<span class="layui-breadcrumb">
+    <a href="">首页</a>
+    <a><cite>友链添加</cite></a>
+    <a href="{:url('Friend/index')}"><button class="layui-btn">返回友链列表</button></a>
+</span>
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend></legend>
+  </fieldset>
+<form class="layui-form" action="{:url('Friend/doAdd')}" method="post">
+    <div class="layui-form-item">
+            <label class="layui-form-label">友链名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" lay-verify="required|username" placeholder="请输入品牌名称" class="layui-input">
+            </div>
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">友链网址</label>
+            <div class="layui-input-inline">
+                <input type="text" name="url" lay-verify="required" placeholder="请输入品牌地址" class="layui-input">
+            </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">logo</label>
+        <div class="layui-upload">
+            <input type="hidden" name="logo">
+            <button type="button" class="layui-btn" id="test1">点击上传图片</button>
+            <div class="layui-upload-list">
+            <img class="layui-upload-img" id="demo1" width="300px;">
+            <p id="demoText"></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+          
+        <button class="layui-btn" id="btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+  
+  <script>
+      
+        layui.use(['form', 'upload'], function(){
+            var $ = layui.jquery
+            ,form = layui.form
+            ,upload = layui.upload;
+            
+          //普通图片上传
+          var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: "{:url('Friend/upload')}"
+            ,before: function(obj){
+              //预读本地文件示例，不支持ie8
+              obj.preview(function(index, file, result){
+                $('#demo1').attr('src', result); //图片链接（base64）
+              });
+            }
+            ,done: function(res){
+              //如果上传失败
+              if(res.code > 0){
+                return layer.msg('上传失败');
+              }else{
+                $("input[name='logo']").val(res.msg);
+                return layer.msg('上传成功');
+              }
+              //上传成功
+            }
+            ,error: function(){
+              //演示失败状态，并实现重传
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+              demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+              });
+            }
+          });
+          //唯一性验证
+            $("#name").blur(function(){
+                // alert(111);
+                var val = $(this).val();
+                if (val != '') {
+                    $.post("{:url('Friend/doAjax')}", { value: val },
+                    function(data){
+                        if (data == 1) {
+                            layer.msg('该名称已存在');
+                        } else{
+                            layer.msg('名称可用');
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "some.php",
+                        data: "name=John&location=Boston",
+                        success: function(msg){
+                            alert( "Data Saved: " + msg );
+                        }
+                    });
+
+
+                }
+                
+            });
+        });
+        
+</script>        
+

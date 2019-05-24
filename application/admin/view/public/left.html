@@ -1,0 +1,59 @@
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <?php
+          $controller = request() -> controller();
+          if(in_array($controller,['Goods','Category','Brands'])){
+            echo "<li class='layui-nav-item layui-nav-itemed'>";
+          }else{
+            echo "<li class='layui-nav-item'>";
+          }
+        ?>
+          <a class="" href="javascript:;">商品管理</a>
+          <dl class="layui-nav-child">
+            <dd {eq name="controller" value="Goods"}class="layui-this"{/eq}><a href="{:url('Goods/index')}">商品管理</a></dd>
+            <dd {eq name="controller" value="Category"}class="layui-this"{/eq}><a href="{:url('Category/index')}">商品分类</a></dd>
+            <dd {eq name="controller" value="Brands"}class="layui-this"{/eq}><a href="{:url('Brands/index')}">商品品牌</a></dd>
+            <!-- <dd><a href="">超链接</a></dd> -->
+          </dl>
+        </li>
+        <?php
+          $controller = request() -> controller();
+          if(in_array($controller,['Index','User','Menu'])){
+            echo "<li class='layui-nav-item layui-nav-itemed'>";
+          }else{
+            echo "<li class='layui-nav-item'>";
+          }
+        ?>
+        
+          <a href="javascript:;">权限管理</a>
+          <dl class="layui-nav-child">
+            <dd {eq name="controller" value="Index"}class="layui-this"{/eq}><a href="{:url('Index/admin')}">管理员管理</a></dd>
+            <dd {eq name="controller" value="User"}class="layui-this"{/eq}><a href="{:url('User/add')}">角色管理</a></dd>
+            <dd {eq name="controller" value="Menu"}class="layui-this"{/eq}><a href="{:url('Menu/index')}">菜单管理</a></dd>
+            <!-- <dd><a href="">超链接</a></dd> -->
+          </dl>
+        </li>
+        <?php
+          $controller = request() -> controller();
+          if(in_array($controller,['Friend'])){
+            echo "<li class='layui-nav-item layui-nav-itemed'>";
+          }else{
+            echo "<li class='layui-nav-item'>";
+          }
+        ?>
+        
+          <a href="javascript:;">友链管理</a>
+          <dl class="layui-nav-child">
+            <dd {eq name="controller" value="Friend"}class="layui-this"{/eq}><a href="{:url('Friend/add')}">友链添加</a></dd>
+            <!-- <dd {eq name="controller" value="Friend"}class="layui-this"{/eq}><a href="{:url('Friend/Index')}">友链展示</a></dd> -->
+            <!-- <dd {eq name="controller" value="Menu"}class="layui-this"{/eq}><a href="{:url('Menu/index')}">菜单管理</a></dd> -->
+            <!-- <dd><a href="">超链接</a></dd> -->
+          </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">云市场</a></li>
+        <li class="layui-nav-item"><a href="">发布商品</a></li>
+      </ul>
+    </div>
+  </div>

@@ -1,0 +1,53 @@
+<span class="layui-breadcrumb">
+        <a href="{:url('User/index')}">首页</a>
+        <a><cite>用户管理</cite></a>
+        <a href="{:url('User/add')}"><button class="layui-btn">＋添加用户</button></a>
+    </span>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+      </fieldset>
+    
+    
+        <div style="margin-bottom: 20px;"></div>
+    
+      <div class="layui-form">
+        <table class="layui-table">
+          <colgroup>
+            <col width="150">
+            <col width="150">
+            <col width="200">
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>角色名</th>
+              <th>角色描述</th>
+              <th>操作</th>
+            </tr> 
+          </thead>
+          <tbody>
+            {volist name="list" id="vo"}    
+            <tr>
+                <td><span class="sps">{$vo.user_id}</span></td>
+                <td><span class="sps">{$vo.user_name}</span></td>
+                <td>{$vo.user_desc}</td>
+                <td>
+                    <a class="layui-btn" href="{:url('User/update','user_id='.$vo.user_id)}">修改</a>
+                    <a href="javascript:if(confirm('您确定删除这条记录吗')) location='{:url('User/del',['user_id'=>$vo.user_id])}'" class="layui-btn layui-btn-danger">删除</a>
+                </td>
+            </tr>
+            {/volist}
+          </tbody>
+        </table>
+        <div id="page" style="margin: 0 auto;">
+                {$list|raw}
+          </div>
+    
+      </div>
+                 
+<script>
+ //获取分页的盒子宽度
+ var width = $('.pagination').width();
+    //动态设置盒子的宽度
+$('#page').css('width',width+1);
+</script>
